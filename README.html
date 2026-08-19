@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kamal | Web Developer & Trek with Sakhi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --card: #161616;
+      --accent: #ff6b35;
+      --accent2: #ffd166;
+      --text: #f0f0f0;
+      --muted: #888;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 5%;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 5% 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
+      top: 50%; left: 30%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 750px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,107,53,0.12);
+      border: 1px solid rgba(255,107,53,0.3);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.4s forwards;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.6s forwards;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.8s forwards;
+    }
+
+    .btn {
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: #ff8558;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255,107,53,0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 1s forwards;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* SECTIONS */
+    section { padding: 6rem 5%; }
+
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 600px;
+      margin-bottom: 3.5rem;
+      font-weight: 300;
+    }
+
+    /* SERVICES */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card:hover {
+      border-color: rgba(255,107,53,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .service-icon {
+      width: 48px; height: 48px;
+      background: rgba(255,107,53,0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .service-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .service-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .service-price {
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* SKILLS */
+    .skills-section { background: var(--surface); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .skill-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-name { font-size: 0.9rem; font-weight: 600; }
+    .skill-pct { font-size: 0.8rem; color: var(--accent); font-weight: 700; }
+
+    .skill-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 100px;
+      width: 0%;
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,107,53,0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .project-thumb {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .project-thumb-1 { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+    .project-thumb-2 { background: linear-gradient(135deg, #1a2a1a, #0d1f0d); }
+    .project-thumb-3 { background: linear-gradient(135deg, #2a1a1a, #1f0d0d); }
+    .project-body { padding: 1.5rem; }
+
+    .project-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      background: rgba(255,107,53,0.1);
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+
+    .project-link:hover { gap: 0.7rem; }
+
+    /* RAIGAD TREK SECTION STYLING */
+    .trek-hero-card {
+      background: linear-gradient(145deg, #181818, #111);
+      border: 1px solid rgba(255,107,53,0.4);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 15px 35px rgba(255,107,53,0.08);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 107, 53, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .quick-specs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .spec-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .spec-box span { font-size: 0.75rem; color: var(--muted); display: block; }
+    .spec-box strong { font-size: 0.9rem; color: #fff; }
+
+    .price-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .price-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--accent2);
+      margin: 0.5rem 0;
+    }
+
+    /* TABS FOR ITINERARY */
+    .tab-container {
+      margin-top: 2rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 1.25rem;
+      border-left: 2px solid rgba(255,107,53,0.3);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px; top: 6px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .timeline-time {
+      font-weight: 700;
+      color: var(--accent2);
+      font-size: 0.85rem;
+    }
+
+    .timeline-title { font-weight: 600; font-size: 0.95rem; margin-top: 0.1rem; }
+    .timeline-desc { font-size: 0.85rem; color: var(--muted); }
+
+    /* HIGHLIGHTS GRID */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+
+    .highlight-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+
+    .highlight-card h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+      color: var(--accent);
+    }
+
+    .highlight-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+    /* INCLUSIONS / EXCLUSIONS / CARRY */
+    .info-split {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .info-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .info-box h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-box ul li {
+      position: relative;
+      padding-left: 1.4rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    .info-box ul li::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: #4cd137;
+      font-weight: bold;
+    }
+
+    .info-box.exclusions ul li::before {
+      content: '✖';
+      color: #e84118;
+    }
+
+    .info-box.carry ul li::before {
+      content: '🎒';
+    }
+
+    /* TESTIMONIALS */
+    .testimonials-section { background: var(--surface); }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .testimonial-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .stars { color: var(--accent2); font-size: 0.9rem; margin-bottom: 1rem; }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+
+    .author-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #fff;
+    }
+
+    /* CONTACT */
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-info h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .contact-icon {
+      width: 44px; height: 44px;
+      background: rgba(255,107,53,0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .contact-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .contact-value { font-size: 0.95rem; font-weight: 500; }
+
+    .contact-form {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+    }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: rgba(255,107,53,0.5);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-group select option { background: var(--surface); }
+
+    /* FOOTER */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--accent); }
+    .footer-text { font-size: 0.85rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+      .trek-hero-card { grid-template-columns: 1fr; gap: 1.5rem; }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Kamal.</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#raigad-trek">🚩 Raigad Trek</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="btn btn-primary" style="padding:0.6rem 1.4rem;font-size:0.85rem;">Hire Me</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <span class="hero-tag">Available for Freelance & Adventures</span>
+      <h1>Web Developer<br>& <span>Digital Marketer</span></h1>
+      <p class="hero-desc">I build fast, beautiful websites and help businesses grow online through SEO, content strategy, and digital marketing.</p>
+      <div class="hero-btns">
+        <a href="#raigad-trek" class="btn btn-primary">🚩 Raigad Trek (22-23 Aug)</a>
+        <a href="#projects" class="btn btn-outline">View My Work →</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">1+</div>
+          <div class="stat-label">Years Exp.</div>
+        </div>
+        <div>
+          <div class="stat-num">100+</div>
+          <div class="stat-label">Pages Built</div>
+        </div>
+        <div>
+          <div class="stat-num">600+</div>
+          <div class="stat-label">Labs Served</div>
+        </div>
+        <div>
+          <div class="stat-num">5+</div>
+          <div class="stat-label">Projects Done</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="reveal">
+      <div class="section-tag">What I Offer</div>
+      <h2 class="section-title">Freelance Services</h2>
+      <p class="section-sub">Professional digital services to help your business grow online.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">🌐</div>
+        <h3>Website Design & Development</h3>
+        <p>Beautiful, fast and mobile-friendly websites built from scratch using HTML, CSS, JS and WordPress.</p>
+        <div class="service-price">Starting ₹15,000</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🛒</div>
+        <h3>Shopify Store Setup</h3>
+        <p>Complete ecommerce store setup with products, payment gateway and SEO optimization.</p>
+        <div class="service-price">Starting ₹20,000</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">📈</div>
+        <h3>SEO Services</h3>
+        <p>Improve your Google rankings with on-page SEO, keyword research and technical SEO fixes.</p>
+        <div class="service-price">₹5,000/month</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">✍️</div>
+        <h3>Blog & Content Writing</h3>
+        <p>SEO-optimized blog posts, product descriptions and website content that ranks and converts.</p>
+        <div class="service-price">₹2,000/month</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🔧</div>
+        <h3>Website Maintenance</h3>
+        <p>Monthly maintenance including plugin updates, security checks, backups and performance monitoring.</p>
+        <div class="service-price">₹3,000/month</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🌍</div>
+        <h3>Domain & Hosting Setup</h3>
+        <p>Complete domain registration, hosting setup, SSL certificate and email configuration.</p>
+        <div class="service-price">Starting ₹2,000</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="skills-section">
+    <div class="reveal">
+      <div class="section-tag">My Expertise</div>
+      <h2 class="section-title">Skills & Tools</h2>
+      <p class="section-sub">Technologies and tools I use to build and grow digital products.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">WordPress</span><span class="skill-pct">85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">SEO</span><span class="skill-pct">80%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+      </div>
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">Elementor</span><span class="skill-pct">82%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+      </div>
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">HTML & CSS</span><span class="skill-pct">65%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="65"></div></div>
+      </div>
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">Cloudflare</span><span class="skill-pct">75%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+      </div>
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">Shopify</span><span class="skill-pct">60%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="60"></div></div>
+      </div>
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">Content Writing</span><span class="skill-pct">78%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="78"></div></div>
+      </div>
+      <div class="skill-item reveal">
+        <div class="skill-top"><span class="skill-name">Digital Marketing</span><span class="skill-pct">72%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="72"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="reveal">
+      <div class="section-tag">My Work</div>
+      <h2 class="section-title">Recent Projects</h2>
+      <p class="section-sub">Real projects I have built and managed for clients.</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-thumb project-thumb-1">🧪</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">WordPress</span>
+            <span class="tag">SEO</span>
+            <span class="tag">Elementor</span>
+          </div>
+          <h3>Flexitest.in</h3>
+          <p>Complete website redesign from scratch. Built 100+ product pages, optimized SEO, managed hosting, domain and all technical tools.</p>
+          <a href="https://flexitest.in" target="_blank" class="project-link">Visit Website →</a>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-thumb project-thumb-2">🌿</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">Domain</span>
+            <span class="tag">Web Dev</span>
+            <span class="tag">Wellness</span>
+          </div>
+          <h3>WellbeingWithShivani.com</h3>
+          <p>Domain purchased and website development in progress for a wellness coach. Full website design and development coming soon.</p>
+          <a href="#" class="project-link">Coming Soon →</a>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-thumb project-thumb-3">📝</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">SEO Writing</span>
+            <span class="tag">Content</span>
+            <span class="tag">Blogs</span>
+          </div>
+          <h3>Blog & SEO Management</h3>
+          <p>Managed and published SEO-optimized blogs for Flexitest. Researched topics, wrote content and linked product pages for better rankings.</p>
+          <a href="https://flexitest.in/blog" target="_blank" class="project-link">View Blogs →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RAIGAD TREK DETAILED SECTION ================= -->
+  <section id="raigad-trek" style="background: var(--surface);">
+    <div class="reveal">
+      <div class="section-tag">Tea Trek Travel with Sakhi Presents</div>
+      <h2 class="section-title">🚩 दुर्गराज किल्ले रायगड — अभ्यासपूर्ण भटकंती</h2>
+      <p class="section-sub">
+        शिवराजधानी रायगडच्या पावन भूमीचा ऐतिहासिक अभ्यास दौरा! दुर्गराज रायगडच्या वैभवाचा सखोल इतिहास, निसर्गरम्य कडे आणि साहसी अनुभव.
+      </p>
+    </div>
+
+    <!-- MAIN TREK BANNER & SPECS -->
+    <div class="trek-hero-card reveal">
+      <div class="trek-main-details">
+        <span class="badge-live">Upcoming Trek • २२ - २३ ऑगस्ट २०२६</span>
+        <h3 style="font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:0.8rem;">
+          दुर्गराज <span style="color:var(--accent);">रायगड</span>
+        </h3>
+        <p style="color:var(--muted);font-size:0.95rem;">
+          महाडजवळील सह्याद्रीच्या डोंगररांगेत वसलेला दुर्गराज रायगड हा हिंदवी स्वराज्याची राजधानी (१६७४). मुख्य वास्तुरचनाकार हिरोजी इंदुलकर यांनी साकारलेला हा अभेद्य किल्ला समुद्रसपाटीपासून १३५६ मी. (४४४९ फूट) उंचीवर दिमाखात उभा आहे.
+        </p>
+
+        <div class="quick-specs">
+          <div class="spec-box">
+            <span>पायथा गाव</span>
+            <strong>पाचाड (महाड)</strong>
+          </div>
+          <div class="spec-box">
+            <span>काठिण्य पातळी</span>
+            <strong>मध्यम (Beginners Ok)</strong>
+          </div>
+          <div class="spec-box">
+            <span>पायऱ्यांची संख्या</span>
+            <strong>१,७३७ पायऱ्या (~२ तास)</strong>
+          </div>
+          <div class="spec-box">
+            <span>प्रवास</span>
+            <strong>पुणे / मुंबई Private Bus</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRICE & BOOKING -->
+      <div class="price-box">
+        <span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">All-Inclusive Package</span>
+        <div class="price-amount">₹१४९९/- <span style="font-size:0.9rem;color:var(--muted);font-weight:400;">/ Person</span></div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem;">प्रायव्हेट ट्रान्सपोर्ट + नाश्ता + जेवण + गाईड + एन्ट्री फी</p>
+        
+        <a href="https://wa.me/918104276237?text=नमस्कार!%20मला%20२२-२३%20ऑगस्टच्या%20रायगड%20ट्रेकसाठी%20बुकिंग%20करायचे%20आहे." target="_blank" class="btn btn-primary" style="width:100%;justify-content:center;font-weight:600;">
+          💬 WhatsApp द्वारे सीट बुक करा
+        </a>
+        <div style="margin-top:1rem;font-size:0.85rem;color:var(--muted);">
+          📞 संपर्क: <strong>+91-8104276237</strong> | 📸 Instagram: <strong>@_with_sakhi</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT MAKES THIS TOUR SPECIAL / HIGHLIGHTS -->
+    <div class="reveal">
+      <h3 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:1rem;">🏰 गडावरील प्रमुख प्रेक्षणीय स्थळे (Key Highlights)</h3>
+      <div class="highlights-grid">
+        <div class="highlight-card">
+          <h4>👑 राजसभा व मेघडंबरी</h4>
+          <p>ज्या ठिकाणी छत्रपती शिवाजी महाराजांचा सुवर्ण अक्षरांनी राज्याभिषेक झाला ती भव्य राजसभा आणि मेघडंबरी.</p>
+        </div>
+        <div class="highlight-card">
+          <h4>🪦 महाराजांची समाधी</h4>
+          <p>जगदीश्वर मंदिरासमोर शांत व पवित्र वातावरणात वसलेले छत्रपती शिवाजी महाराजांचे समाधी स्थळ.</p>
+        </div>
+        <div class="highlight-card">
+          <h4>🚪 महादरवाजा व नगारखाना</h4>
+          <p>हत्तींच्या हल्ल्यालाही तोंड देऊ शकणारे महादरवाजाचे दोन भव्य बुरुज आणि ध्वनीशास्त्राचा अद्भुत नमुना असलेला नगारखाना.</p>
+        </div>
+        <div class="highlight-card">
+          <h4>⛰️ टकमक टोक व हिरकणी बुरुज</h4>
+          <p>थरारक खोल दरीचे टकमक टोक आणि वात्सल्य व धैर्याची साक्ष देणारा ऐतिहासिक हिरकणी बुरुज.</p>
+        </div>
+        <div class="highlight-card">
+          <h4>🛍️ बाजारपेठ व गंगासागर तलाव</h4>
+          <p>घोड्यावरून खरेदी करता येईल अशी दुमजली बाजारपेठ आणि बाराही महिने पाणी असणारा गंगासागर तलाव.</p>
+        </div>
+        <div class="highlight-card">
+          <h4>🌾 धान्य कोठार व राणीवसा</h4>
+          <p>गडावरील सैन्याची उत्तम सोय दर्शवणारी भव्य धान्य कोठारे आणि अष्टप्रधानांचे व राण्यांचे महाल.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITINERARY TABS (PUNE & MUMBAI) -->
+    <div class="tab-container reveal">
+      <h3 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">📅 ट्रेक रूपरेषा व वेळापत्रक (Itinerary)</h3>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">तुमच्या शहराचा मार्ग आणि वेळ निवडण्यासाठी खालील टॅबवर क्लिक करा:</p>
+
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="openTab(event, 'pune-tab')">📍 पुणे पिकअप & वेळापत्रक</button>
+        <button class="tab-btn" onclick="openTab(event, 'mumbai-tab')">📍 मुंबई पिकअप & वेळापत्रक</button>
+      </div>
+
+      <!-- PUNE ITINERARY -->
+      <div id="pune-tab" class="tab-content active">
+        <div style="background:rgba(255,107,53,0.08);padding:1rem;border-radius:10px;margin-bottom:1.5rem;border:1px solid rgba(255,107,53,0.2);">
+          <strong>🚌 पुणे पिकअप पॉइंट्स (शनिवार, २२ ऑगस्ट):</strong><br>
+          • कर्वे नगर (11:00 PM) ➔ वारजे ब्रिज (11:30 PM) ➔ चांदणी चौक (11:45 PM) ➔ हिंजवडी / वाकड ब्रिज (12:15 AM) ➔ तळेगाव टोल नाका (12:45 AM)
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">शनिवार • 11:15 PM</div>
+          <div class="timeline-title">पुण्यातून प्रवासाला सुरुवात</div>
+          <div class="timeline-desc">खाजगी बसने रायगडच्या दिशेने प्रवास सुरू (मार्गे ताम्हिणी घाट). बसमध्ये परिचय सत्र व विश्रांती.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 04:30 AM - 05:00 AM</div>
+          <div class="timeline-title">रायगड पायथा (पाचाड) आगमन</div>
+          <div class="timeline-desc">पायथ्याशी पोहोचणे, फ्रेश होणे आणि गरमागरम चहा-नाश्ता.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 06:30 AM</div>
+          <div class="timeline-title">ट्रेक ब्रीफिंग आणि चढाई सुरू</div>
+          <div class="timeline-desc">सूचना आणि पायऱ्यांच्या मार्गाने गड चढायला सुरुवात.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 08:30 AM - 01:00 PM</div>
+          <div class="timeline-title">🚩 महादरवाजा प्रवेश व सविस्तर अभ्यासपूर्ण गडदर्शन</div>
+          <div class="timeline-desc">होळीचा माळ, नगारखाना, राजसभा, मेघडंबरी, समाधी, जगदीश्वर मंदिर, बाजारपेठ, गंगासागर तलाव, टकमक टोक या सर्व ठिकाणांचा अभ्यासपूर्ण इतिहास.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 01:00 PM - 02:00 PM</div>
+          <div class="timeline-title">🍱 रुचकर दुपारचे जेवण</div>
+          <div class="timeline-desc">गडावर / पायथ्याशी गावरान पद्धतीचे स्वादिष्ट जेवण.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 02:30 PM - 04:30 PM</div>
+          <div class="timeline-title">गड उतरणे व परतीचा प्रवास</div>
+          <div class="timeline-desc">पायथ्याशी पोहोचून फ्रेश होणे, सायंकाळचा चहा आणि पुण्यासाठी परतीचा प्रवास सुरू.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 09:30 PM - 10:00 PM</div>
+          <div class="timeline-title">🏡 पुण्यात सुरक्षित आगमन</div>
+          <div class="timeline-desc">अविस्मरणीय आठवणींसह कर्वे नगर / पुण्यात आगमन (ट्रॅफिकनुसार वेळेत बदल होऊ शकतो).</div>
+        </div>
+      </div>
+
+      <!-- MUMBAI ITINERARY -->
+      <div id="mumbai-tab" class="tab-content">
+        <div style="background:rgba(255,107,53,0.08);padding:1rem;border-radius:10px;margin-bottom:1.5rem;border:1px solid rgba(255,107,53,0.2);">
+          <strong>🚌 मुंबई पिकअप पॉइंट्स (शनिवार, २२ ऑगस्ट):</strong><br>
+          • बोरिवली नॅशनल पार्क (8:45 PM) ➔ ओबेरॉय मॉल गोरेगाव (9:15 PM) ➔ अंधेरी गुंदवली (9:30 PM) ➔ सायन लंच होम जवळ (10:00 PM) ➔ मानखुर्द हायवे जंक्शन (11:00 PM) ➔ वाशी प्लाझा (11:15 PM) ➔ कळंबोली मॅकडोनाल्ड (11:45 PM)
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">शनिवार • 11:30 PM</div>
+          <div class="timeline-title">मुंबईतून रायगडकडे प्रस्थान</div>
+          <div class="timeline-desc">खाजगी वाहनाने रायगडच्या दिशेने प्रवास सुरू. गाडीमध्ये गप्पागोष्टी, गाणी आणि विश्रांती.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 04:30 AM - 05:00 AM</div>
+          <div class="timeline-title">पाचाड (रायगड पायथा) आगमन</div>
+          <div class="timeline-desc">पायथ्याशी आगमन, फ्रेश होणे व गरमागरम चहा आणि नाश्ता.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 06:30 AM</div>
+          <div class="timeline-title">ट्रेक ब्रीफिंग व चित्तदरवाजा मार्गे चढाई</div>
+          <div class="timeline-desc">सुरक्षा सूचना घेऊन शिस्तीत पायऱ्यांच्या मार्गाने चढाईला सुरुवात.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 08:30 AM - 01:00 PM</div>
+          <div class="timeline-title">🚩 महादरवाजा व अभ्यासपूर्ण गडभ्रमंती</div>
+          <div class="timeline-desc">राजसभा, मेघडंबरी, छत्रपती शिवाजी महाराज समाधी, जगदीश्वर मंदिर, बाजारपेठ, गंगासागर, टकमक टोक, राणीवसा यांचे सविस्तर गाईडसह दर्शन.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 01:00 PM - 02:00 PM</div>
+          <div class="timeline-title">🍱 गावरान दुपारचे जेवण</div>
+          <div class="timeline-desc">गडावर किंवा पायथ्याशी रुचकर पोटभर जेवण.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 02:30 PM - 04:30 PM</div>
+          <div class="timeline-title">गड उतरणे व मुंबईकडे प्रस्थान</div>
+          <div class="timeline-desc">पायथ्याशी आगमन, चहापान आणि मुंबईच्या दिशेने परतीचा प्रवास सुरू.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">रविवार • 09:30 PM - 10:00 PM</div>
+          <div class="timeline-title">🏡 मुंबईत सुखरूप आगमन</div>
+          <div class="timeline-desc">वाशी, मानखुर्द, सायन, बोरिवली येथे सुखद आठवणींसह आगमन.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCLUSIONS, EXCLUSIONS & THINGS TO CARRY -->
+    <div class="info-split reveal">
+      <div class="info-box">
+        <h4>📦 टूरमध्ये काय समाविष्ट आहे?</h4>
+        <ul>
+          <li>पुणे / मुंबई ते पाचाड येण्या-जाण्याचा खाजगी प्रवास (Private Bus)</li>
+          <li>१ सकाळचा नाश्ता आणि चहा</li>
+          <li>१ रुचकर दुपारचे जेवण (गावरान व्हेज / नॉन-व्हेज)</li>
+          <li>गडाची सर्व प्रवेश शुल्क व परवानग्या</li>
+          <li>अभ्यासपूर्ण माहिती देणारे अनुभवी इतिहास अभ्यासक / गाईड</li>
+          <li>प्रथमोपचार किट (First Aid Kit) आणि सहकार्य</li>
+        </ul>
+      </div>
+
+      <div class="info-box exclusions">
+        <h4>🚫 काय समाविष्ट नाही?</h4>
+        <ul>
+          <li>कोणताही वैयक्तिक खर्च किंवा मिनरल वॉटर / कोल्ड्रिंक्स</li>
+          <li>प्रवासादरम्यानचा वैयक्तिक विमा (Insurance)</li>
+          <li>वर नमूद न केलेले अतिरिक्त जेवण किंवा खाद्यपदार्थ</li>
+          <li>रस्त्यावरील ट्रॅफिक / हवामानामुळे होणारे अनपेक्षित खर्च</li>
+        </ul>
+      </div>
+
+      <div class="info-box carry">
+        <h4>🎒 सोबत काय काय आणावे?</h4>
+        <ul>
+          <li>२ ते ३ लिटर पिण्याचे पाणी (अतिशय महत्त्वाचे)</li>
+          <li>चांगल्या ग्रीपचे ट्रेकिंग किंवा स्पोर्ट्स शूज</li>
+          <li>पावसाळी ट्रेक असल्याने रेनकोट / पाँजो किंवा विंडरचीटर</li>
+          <li>ओले कपडे ठेवण्यासाठी प्लास्टिक पिशव्या व अतिरिक्त कपड्यांचा जोड</li>
+          <li>वैयक्तिक औषधे, इलेक्ट्रॉल / ग्लुकोज पावडर</li>
+          <li>स्वतःचे मूळ ओळखपत्र (ID Proof)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section">
+    <div class="reveal">
+      <div class="section-tag">What Clients Say</div>
+      <h2 class="section-title">Testimonials</h2>
+      <p class="section-sub">Feedback from people I have worked with.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Kamal completely redesigned our website from scratch and improved our online presence significantly. He handles everything — SEO, blogs, hosting — all independently."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">F</div>
+          <div>
+            <div class="author-name">Flexitest Team</div>
+            <div class="author-role">Advance Catalyst Pvt. Ltd.</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Very professional and responsive. Kamal helped us get our domain set up quickly and is building our wellness website. Great communication throughout!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div>
+            <div class="author-name">Shivani Ma'am</div>
+            <div class="author-role">Wellness Coach</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-wrapper">
+      <div class="contact-info reveal">
+        <div class="section-tag">Get In Touch</div>
+        <h2>Let's Work or<br>Trek Together!</h2>
+        <p>वेबसाईट डेव्हलपमेंटसाठी किंवा रायगड ट्रेकच्या सीट बुकिंगसाठी थेट संपर्क करा.</p>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">kamal@email.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div>
+            <div class="contact-label">Trek Inquiry / WhatsApp</div>
+            <a href="https://wa.me/918104276237" class="contact-value" style="color:var(--text);text-decoration:none;">+91 8104276237</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📸</div>
+          <div>
+            <div class="contact-label">Instagram</div>
+            <a href="https://instagram.com/_with_sakhi" target="_blank" rel="noopener noreferrer" class="contact-value" style="color: var(--text); text-decoration: none;">@_with_sakhi</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-label">Location</div>
+            <div class="contact-value">Mumbai & Pune, Maharashtra</div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="तुमचे नाव टाका"/>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="तुमचा ईमेल आयडी टाका"/>
+        </div>
+        <div class="form-group">
+          <label>Service / Trek Inquiry</label>
+          <select>
+            <option>🚩 रायगड ट्रेक बुकिंग (२२-२३ ऑगस्ट) - पुणे</option>
+            <option>🚩 रायगड ट्रेक बुकिंग (२२-२३ ऑगस्ट) - मुंबई</option>
+            <option>Website Design & Development</option>
+            <option>Shopify Store Setup</option>
+            <option>SEO Services</option>
+            <option>Other Collaboration</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message / नंबर ऑफ ट्रेकर्स</label>
+          <textarea placeholder="तुमचा मेसेज किंवा ट्रेकसाठी किती जण आहात ते इथे लिहा..."></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="alert('Message sent! आम्ही लवकरच तुमच्याशी संपर्क करू 😊')">Send Message →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Kamal.</div>
+    <div class="footer-text">© 2026 Kamal. Built with HTML, CSS & JS 💪</div>
+    <div class="footer-links">
+      <a href="#home">Home</a>
+      <a href="#services">Services</a>
+      <a href="#projects">Projects</a>
+      <a href="#raigad-trek">Raigad Trek</a>
+      <a href="#contact">Contact</a>
+      <a href="https://instagram.com/_with_sakhi" target="_blank" rel="noopener noreferrer">@_with_sakhi</a>
+    </div>
+  </footer>
+
+  <script>
+    // TAB SWITCHING LOGIC FOR ITINERARY
+    function openTab(evt, tabName) {
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    // SCROLL REVEAL ANIMATION
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // SKILL BAR ANIMATION
+    const skillObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+            const width = bar.getAttribute('data-width');
+            setTimeout(() => { bar.style.width = width + '%'; }, 200);
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const skillsSection = document.getElementById('skills');
+    if (skillsSection) skillObserver.observe(skillsSection);
+
+    // SMOOTH NAV ACTIVE ON SCROLL
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        if (window.scrollY >= section.offsetTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.style.color = link.getAttribute('href') === '#' + current ? '#f0f0f0' : '';
+      });
+    });
+  </script>
+</body>
+</html>
